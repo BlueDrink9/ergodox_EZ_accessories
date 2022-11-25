@@ -17,8 +17,10 @@ base_thickness = 3;
 top_right_board_corner_radius = 42.14;
 thumb_cluster_corner_radius = 21.8;
 thumb_cluster_angle_away_from_left_side = 115;
+// Far left edge
 thumb_cluster_width = 73.7;
-thumb_cluster_length = 95;
+// Bottom-most edge
+thumb_cluster_length = 95.8;
 thumb_cluster_right_inflection_len_from_right_side = 85.5;
 
 // Basically starts just after this. Same as side wall len
@@ -47,12 +49,13 @@ module ergodox_outline(base_thickness=base_thickness){
 
 module thumb_cluster(base_thickness){
     // Thumb cluster
-    translate([thumb_cluster_right_inflection_len_from_right_side, 0,0]){
+    translate([board_width_top - thumb_cluster_right_inflection_len_from_right_side, -0,0]){
         rotate([0,0,thumb_cluster_angle_away_from_left_side]){
             cube([thumb_cluster_width, thumb_cluster_length, base_thickness]);
         }
     }
 }
+
 module __board_base(base_thickness){
     // Main rectangle
     cube([board_width_top, main_board_length, base_thickness]);
