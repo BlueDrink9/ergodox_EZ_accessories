@@ -46,6 +46,7 @@ support_strut_center_distance_from_right = 82.5;
 
 bracket_tunnel_height = function(tunnel_width, wall_thickness)
     tunnel_height + 2 * wall_thickness;
+
 // }
 
 // Main baseplate
@@ -109,8 +110,8 @@ module bracket_tunnel(
 module supports(){
     support_widths = [
         support_strut_left_width + mount_wall_thickness,
-                                 support_strut_center_width,
-                                 support_strut_right_width + mount_wall_thickness,
+        support_strut_center_width,
+        support_strut_right_width + mount_wall_thickness,
     ];
     support_distances_from_left = [
         -mount_wall_thickness,
