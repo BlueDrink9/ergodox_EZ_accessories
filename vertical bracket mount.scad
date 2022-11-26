@@ -1,3 +1,4 @@
+// {
 $fa=1;
 $fs=0.4;
 use <ergodox_ez_outline.scad>;
@@ -45,6 +46,45 @@ support_strut_center_distance_from_right = 82.5;
 
 bracket_tunnel_height = function(tunnel_width, wall_thickness)
     tunnel_height + 2 * wall_thickness;
+// }
+
+// Main baseplate
+translate([0,-main_board_length,0]){
+    ergodox_outline(base_thickness = 3);
+}
+
+// baseplate_extension_behind_cords
+translate ([-mount_wall_thickness, -overlap, 0]){
+    cube([mount_width, cord_gap, base_thickness]);
+}
+
+// Bracket tunnel
+color("green"){
+    translate ([-mount_wall_thickness, cord_gap-overlap,
+            0]){
+        rotate ([180,-90,90]){
+            bracket_tunnel();
+        }
+    }
+}
+
+color("blue"){
+    supports();
+}
+color("purple"){
+    top_coverplate();
+}
+walls();
+
+// color("red"){
+//     translate([0,0,-30]){
+//     // Wall
+//     rotate([180,270,0]){
+//         cube([wall_height, top_legs_distance_from_top-0.1, wall_thickness]);
+//     }
+//     }
+// }
+
 
 module bracket_tunnel(
         length=mount_width,
@@ -64,67 +104,26 @@ module bracket_tunnel(
             cube([tunnel_width, length + 99, tunnel_height]);
         }
     }
-
-}
-
-// Main baseplate
-translate([0,-main_board_length,0]){
-    ergodox_outline(base_thickness = 3);
-}
-
-// baseplate_extension_behind_cords
-translate ([-mount_wall_thickness, -overlap, 0]){
-    cube([mount_width, cord_gap, base_thickness]);
 }
 
 module supports(){
     support_widths = [
         support_strut_left_width + mount_wall_thickness,
-        support_strut_center_width,
-        support_strut_right_width + mount_wall_thickness,
+                                 support_strut_center_width,
+                                 support_strut_right_width + mount_wall_thickness,
     ];
     support_distances_from_left = [
         -mount_wall_thickness,
         board_width_top - support_strut_center_width - support_strut_center_distance_from_right,
         board_width_top - support_strut_right_width,
     ];
-    color("blue"){
-        for(i=[0:2]){
-            translate ([support_distances_from_left[i], 0, base_thickness-overlap]){
-                cube([support_widths[i], cord_gap, wall_height]);
-            }
+    for(i=[0:2]){
+        translate ([support_distances_from_left[i], 0, base_thickness-overlap]){
+            cube([support_widths[i], cord_gap, wall_height]);
         }
-    };
+    }
 };
-supports();
 
-
-// Bracket tunnel
-color("green"){
-    translate ([-mount_wall_thickness, cord_gap-overlap,
-            0]){
-        rotate ([180,-90,90]){
-            bracket_tunnel();
-        }
-    }
-}
-
-    color("purple"){
-top_coverplate();
-}
-
-module led_window(){
-    translate([0,coverable_part_of_top_length-led_cluster_dist_from_top,0]){
-        // Reset hole window
-        translate([reset_hole_distance_from_left, led_cluster_length/2, -1]){
-            cylinder(r=reset_hole_radius, h=cover_thickness+10);
-        }
-        // LED window
-        translate([led_cluster_dist_from_left, 0, -1]){
-            cube([led_cluster_width, led_cluster_length, cover_thickness+10]);
-        }
-    }
-}
 
 module top_coverplate(){
     translate ([
@@ -152,24 +151,31 @@ module top_coverplate(){
     }
 }
 
-// Walls either side
-for (x_offset = [-mount_wall_thickness+overlap, board_width_top - overlap]){
-    translate([x_offset, 0,0]){
-        rotate([180,270,0]){
-            cube([
-                    wall_height + mount_wall_thickness,
-                    coverable_part_of_top_length-overlap,
-                    mount_wall_thickness
-            ]);
+module led_window(){
+    translate([0,coverable_part_of_top_length-led_cluster_dist_from_top,0]){
+        // Reset hole window
+        translate([reset_hole_distance_from_left, led_cluster_length/2, -1]){
+            cylinder(r=reset_hole_radius, h=cover_thickness+10);
+        }
+        // LED window
+        translate([led_cluster_dist_from_left, 0, -1]){
+            cube([led_cluster_width, led_cluster_length, cover_thickness+10]);
         }
     }
 }
 
-// color("red"){
-//     translate([0,0,-30]){
-//     // Wall
-//     rotate([180,270,0]){
-//         cube([wall_height, top_legs_distance_from_top-0.1, wall_thickness]);
-//     }
-//     }
-// }
+
+module walls(){
+    for (x_offset = [-mount_wall_thickness+overlap, board_width_top - overlap]){
+        translate([x_offset, 0,0]){
+            rotate([180,270,0]){
+                cube([
+                        wall_height + mount_wall_thickness,
+                        coverable_part_of_top_length-overlap,
+                        mount_wall_thickness
+                ]);
+            }
+        }
+    }
+}
+
