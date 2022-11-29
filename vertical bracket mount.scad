@@ -13,7 +13,8 @@ use <ergodox_ez_outline.scad>;
 overlap = 0.001;
 board_width_top = 159.5;
 main_board_length = 133.85;
-wall_height = 23;
+keyboard_height = 22.5;
+wall_height = keyboard_height+1;
 base_thickness = 3;
 cover_thickness = 2;
 mount_wall_thickness = 3;
@@ -51,7 +52,7 @@ bracket_tunnel_height = function(tunnel_width, wall_thickness)
 
 // Main baseplate
 translate([0,-main_board_length,0]){
-    ergodox_outline(base_thickness = 3);
+    ergodox_outline(base_thickness = 3, square_off_tops=true);
 }
 
 // baseplate_extension_behind_cords
@@ -73,16 +74,14 @@ color("blue"){
     supports();
 }
 color("purple"){
+// rotate([-1,0,0]){
     top_coverplate();
+// }
 }
 walls();
 
 // color("red"){
 //     translate([0,0,-30]){
-//     // Wall
-//     rotate([180,270,0]){
-//         cube([wall_height, top_legs_distance_from_top-0.1, wall_thickness]);
-//     }
 //     }
 // }
 

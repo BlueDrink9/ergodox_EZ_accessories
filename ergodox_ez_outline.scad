@@ -126,6 +126,21 @@ module ergodox_outline(base_thickness=base_thickness, square_off_tops=false){
                 cylinder(r=foot_radius, h=base_thickness+2*overlap);
             }
         }
+
+        // lengthen the holes for the top, to allow space for the bracket
+        for (position = tops){
+            hull(){
+                for (y_offset = [0, coverable_part_of_top_length]){
+                    translate([
+                            position.x,
+                            main_board_length - position.y - y_offset,
+                            -overlap
+                    ]){
+                        cylinder(r=foot_radius, h=base_thickness+2*overlap);
+                    }
+                }
+            }
+        }
     }
 
     // Board with gaps for feet
