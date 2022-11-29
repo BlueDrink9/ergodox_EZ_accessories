@@ -14,7 +14,8 @@ main_board_length = 133.85;
 wall_height = 23;
 base_thickness = 3;
 
-top_right_board_corner_radius = 42.14;
+bottom_right_board_corner_radius = 42.14/2;
+top_right_board_corner_radius = 12.45;
 thumb_cluster_corner_radius = 21.8;
 thumb_cluster_angle_away_from_left_side = 115;
 // Far left edge
@@ -40,33 +41,64 @@ foot_top_left_dist_from_left_edge = 17.92;
 // Thumb cluster foot
 foot_bottom_left_dist_from_left_edge = -24.82;
 
-module ergodox_outline(base_thickness=base_thickness){
-    difference(){
-        __board_base(base_thickness);
-        __foot_holes(base_thickness);
-    }
-}
+module ergodox_outline(base_thickness=base_thickness, square_off_tops=false){
 
-module thumb_cluster(base_thickness){
-    // Thumb cluster
-    translate([board_width_top - thumb_cluster_right_inflection_len_from_right_side, -0,0]){
-        rotate([0,0,thumb_cluster_angle_away_from_left_side]){
-            cube([thumb_cluster_width, thumb_cluster_length, base_thickness]);
-        }
-    }
-}
-
-module __board_base(base_thickness){
-    // Main rectangle
-    cube([board_width_top, main_board_length, base_thickness]);
-    thumb_cluster(base_thickness);
-}
-
+    module board_base(){
         main_base();
         // Thumb cluster
         translate([board_width_top - thumb_cluster_right_inflection_len_from_right_side, -0,0]){
             rotate([0,0,thumb_cluster_angle_away_from_left_side]){
                 thumb_cluster();
+            }
+        }
+
+        module thumb_cluster(){
+            // Thumb cluster
+            // TODO do this as a 2D shape, I think.
+            hull(){
+                // rounded end
+                translate([thumb_cluster_corner_radius,thumb_cluster_length-thumb_cluster_corner_radius,0]){
+                    cylinder(r=thumb_cluster_corner_radius, h=base_thickness);
+                    translate([thumb_cluster_width-2*thumb_cluster_corner_radius,0]){
+                        cylinder(r=thumb_cluster_corner_radius, h=base_thickness);
+                    }
+                }
+                // Main part of cluster
+                translate([0, 0, 0]){
+                    cube([thumb_cluster_width,
+                            thumb_cluster_length-thumb_cluster_corner_radius,
+                            base_thickness]);
+                }
+            }
+        }
+
+        module main_base(){
+            hull(){
+                // Bottoms - one cylinder is irrelevant, hidden within the thumb
+                // cluster - but something needs to be there to finish the hull.
+                for (trans_x = [board_width_top - bottom_right_board_corner_radius,
+                        bottom_right_board_corner_radius]){
+                    translate([trans_x, bottom_right_board_corner_radius, 0]){
+                        cylinder(r=bottom_right_board_corner_radius, h=base_thickness);
+                    }
+                }
+                // Tops
+                for (trans_x = [board_width_top - top_right_board_corner_radius,
+                        top_right_board_corner_radius]){
+                    translate([trans_x, main_board_length  - top_right_board_corner_radius, 0]){
+                        if(square_off_tops){
+                            // For if you are adding something else to the
+                            // top (eg a bracket)
+                            translate([-top_right_board_corner_radius, 0, 0])
+                                cube([
+                                    top_right_board_corner_radius*2,
+                                    top_right_board_corner_radius*2,
+                                    base_thickness]);
+                        }else{
+                            cylinder(r=top_right_board_corner_radius, h=base_thickness);
+                        }
+                    }
+                }
             }
         }
     }
@@ -99,12 +131,11 @@ module __board_base(base_thickness){
             }
         }
     }
-    // thumb cluster bottom left
-    translate([
-            foot_bottom_left_dist_from_left_edge,
-            main_board_length - feet_bottom_dist_from_top_edge,
-            -overlap/2
-    ]){
-        cylinder(r=foot_radius, h=base_thickness+overlap);
+
+    // Board with gaps for feet
+    difference(){
+        board_base();
+        foot_holes();
     }
 }
+
