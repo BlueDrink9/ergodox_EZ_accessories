@@ -62,30 +62,42 @@ module __board_base(base_thickness){
     thumb_cluster(base_thickness);
 }
 
-module __foot_holes(base_thickness){
-    // top left
-    translate([
+        main_base();
+        // Thumb cluster
+        translate([board_width_top - thumb_cluster_right_inflection_len_from_right_side, -0,0]){
+            rotate([0,0,thumb_cluster_angle_away_from_left_side]){
+                thumb_cluster();
+            }
+        }
+    }
+
+    module foot_holes(){
+        trans_ys = [feet_top_dist_from_top_edge, feet_bottom_dist_from_top_edge];
+        top_feet_x_translations = [
+            // top left
             foot_top_left_dist_from_left_edge,
-            main_board_length - feet_top_dist_from_top_edge,
-            -overlap/2
-            ]){
-        cylinder(r=foot_radius, h=base_thickness+overlap);
-    }
-    // top right
-    translate([
+            // top right
             feet_right_dist_from_left_edge,
-            main_board_length - feet_top_dist_from_top_edge,
-            -overlap/2
-    ]){
-        cylinder(r=foot_radius, h=base_thickness+overlap);
-    }
-    // bottom right
-    translate([
+        ];
+        bottom_feet_x_translations = [
+            // bottom left/thumb cluster
+            foot_bottom_left_dist_from_left_edge,
+            // bottom right
             feet_right_dist_from_left_edge,
-            main_board_length - feet_bottom_dist_from_top_edge,
-            -overlap/2
-    ]){
-        cylinder(r=foot_radius, h=base_thickness+overlap);
+        ];
+        trans_x_lists = [top_feet_x_translations, bottom_feet_x_translations];
+        for(i = [0:1]){
+            trans_x_list = trans_x_lists[i];
+            for(trans_x = trans_x_list){
+                translate([
+                        trans_x,
+                        main_board_length - trans_ys[i],
+                        -overlap
+                ]){
+                    cylinder(r=foot_radius, h=base_thickness+2*overlap);
+                }
+            }
+        }
     }
     // thumb cluster bottom left
     translate([
