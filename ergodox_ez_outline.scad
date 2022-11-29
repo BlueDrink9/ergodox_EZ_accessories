@@ -104,30 +104,26 @@ module ergodox_outline(base_thickness=base_thickness, square_off_tops=false){
     }
 
     module foot_holes(){
-        trans_ys = [feet_top_dist_from_top_edge, feet_bottom_dist_from_top_edge];
-        top_feet_x_translations = [
+        tops = [
             // top left
-            foot_top_left_dist_from_left_edge,
+            [foot_top_left_dist_from_left_edge, feet_top_dist_from_top_edge],
             // top right
-            feet_right_dist_from_left_edge,
+            [feet_right_dist_from_left_edge, feet_top_dist_from_top_edge]
         ];
-        bottom_feet_x_translations = [
+        bottoms = [
             // bottom left/thumb cluster
-            foot_bottom_left_dist_from_left_edge,
+            [foot_bottom_left_dist_from_left_edge, feet_bottom_dist_from_top_edge],
             // bottom right
-            feet_right_dist_from_left_edge,
+            [feet_right_dist_from_left_edge, feet_bottom_dist_from_top_edge]
         ];
-        trans_x_lists = [top_feet_x_translations, bottom_feet_x_translations];
-        for(i = [0:1]){
-            trans_x_list = trans_x_lists[i];
-            for(trans_x = trans_x_list){
-                translate([
-                        trans_x,
-                        main_board_length - trans_ys[i],
-                        -overlap
-                ]){
-                    cylinder(r=foot_radius, h=base_thickness+2*overlap);
-                }
+        positions = concat(tops, bottoms);
+        for(position = positions){
+            translate([
+                    position.x,
+                    main_board_length - position.y,
+                    -overlap
+            ]){
+                cylinder(r=foot_radius, h=base_thickness+2*overlap);
             }
         }
     }
