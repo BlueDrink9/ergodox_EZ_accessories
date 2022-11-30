@@ -11,8 +11,6 @@ $fs=0.4;
 overlap = 0.01;
 board_width_top = 159.5;
 main_board_length = 133.85;
-wall_height = 23;
-base_thickness = 3;
 
 bottom_right_board_corner_radius = 42.14/2;
 top_right_board_corner_radius = 12.45;
@@ -24,12 +22,7 @@ thumb_cluster_width = 73.7;
 thumb_cluster_length = 95.8;
 thumb_cluster_right_inflection_len_from_right_side = 85.5;
 
-// Basically starts just after this. Same as side wall len
 top_legs_distance_from_top = 44;
-side_wall_length = 44;
-// Determines how long the supports are
-cord_gap = 23;
-coverable_part_of_top_length = 26;
 
 foot_radius = 5.5;
 // the top 2 feet share position on Y with one-another, as do the bottom 2.
@@ -127,20 +120,6 @@ module ergodox_outline(base_thickness=base_thickness, square_off_tops=false){
             }
         }
 
-        // lengthen the holes for the top, to allow space for the bracket
-        for (position = tops){
-            hull(){
-                for (y_offset = [0, coverable_part_of_top_length]){
-                    translate([
-                            position.x,
-                            main_board_length - position.y - y_offset,
-                            -overlap
-                    ]){
-                        cylinder(r=foot_radius, h=base_thickness+2*overlap);
-                    }
-                }
-            }
-        }
     }
 
     // Board with gaps for feet

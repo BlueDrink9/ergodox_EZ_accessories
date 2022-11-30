@@ -1,7 +1,7 @@
 // {
-$fa=1;
-$fs=0.4;
-use <ergodox_ez_outline.scad>;
+// $fa=1;
+// $fs=0.4;
+include <ergodox_ez_outline.scad>;
 // Orientations are designed for the right hand keyboard.
 // Looking at it straight and flat on a desk with the thumb cluster closest to you, and the LEDs furthest from you.
 // The top is the LED cluster end.
@@ -10,11 +10,12 @@ use <ergodox_ez_outline.scad>;
 // x = width, y = length, z = height
 // Origin is at top left corner of the keyboard (tunnel in past origin)
 
-overlap = 0.001;
-board_width_top = 159.5;
-main_board_length = 133.85;
+// TODO separate off the top plate, add a joint of some sort.
+// overlap = 0.001;
+// board_width_top = 159.5;
+// main_board_length = 133.85;
 keyboard_height = 22.5;
-wall_height = keyboard_height+1;
+wall_height = keyboard_height + 1;
 base_thickness = 3;
 cover_thickness = 2;
 mount_wall_thickness = 3;
@@ -24,7 +25,6 @@ mount_width = board_width_top + 2 * mount_wall_thickness;
 side_wall_length = 44;
 // Determines how long the supports are
 cord_gap = 23;
-thumb_cluster_width = 73.7;
 coverable_part_of_top_length = 26;
 
 tunnel_width = 25;
@@ -52,7 +52,10 @@ bracket_tunnel_height = function(tunnel_width, wall_thickness)
 
 // Main baseplate
 translate([0,-main_board_length,0]){
-    ergodox_outline(base_thickness = 3, square_off_tops=true);
+    difference(){
+        ergodox_outline(base_thickness = 3, square_off_tops=true);
+        long_top_foot_holes();
+    }
 }
 
 // baseplate_extension_behind_cords
@@ -179,3 +182,25 @@ module walls(){
     }
 }
 
+module long_top_foot_holes(){
+    tops = [
+        // top left
+        [foot_top_left_dist_from_left_edge, feet_top_dist_from_top_edge],
+        // top right
+        [feet_right_dist_from_left_edge, feet_top_dist_from_top_edge]
+    ];
+    // lengthen the holes for the top, to allow space for the bracket
+    for (position = tops){
+        hull(){
+            for (y_offset = [0, coverable_part_of_top_length]){
+                translate([
+                        position.x,
+                        main_board_length - position.y - y_offset,
+                        -overlap
+                ]){
+                    cylinder(r=foot_radius, h=base_thickness+2*overlap);
+                }
+            }
+        }
+    }
+}
