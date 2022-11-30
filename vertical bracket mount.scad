@@ -27,8 +27,9 @@ side_wall_length = 44;
 cord_gap = 23;
 coverable_part_of_top_length = 26;
 
-tunnel_width = 25;
-tunnel_height = 3;
+tunnel_tolerance = 0.1;
+tunnel_width = 25+tunnel_tolerance;
+tunnel_height = 3+tunnel_tolerance/2;
 
 led_cluster_dist_from_left = board_width_top - 61.5;
 led_cluster_dist_from_top = 15;
@@ -85,10 +86,14 @@ color("purple"){
 }
 walls();
 
-// color("red"){
-//     translate([0,0,-30]){
-//     }
-// }
+brace_against_vertical();
+
+color("red"){
+    translate([0,0,-30]){
+    // brace_against_vertical();
+
+    }
+}
 
 
 module bracket_tunnel(
@@ -204,5 +209,35 @@ module long_top_foot_holes(){
                 }
             }
         }
+    }
+}
+
+// Small part that braces against the vertical part of the metal bracket this gets mounted to, to reduce flex.
+module brace_against_vertical(){
+    // Arbitrary positioning.
+    extension_dim = [50, 30];
+    // Arbitrary
+    plug_len = 14;
+
+    plug_wall_thickness = 5;
+    bracket_width = tunnel_width - tunnel_tolerance;
+    plug_width = bracket_width + base_thickness;
+    bracket_hole_width = 5;
+    bracket_hole_depth = 3 + 0.5;
+    translate([
+    -extension_dim.x + overlap,
+    -thumb_cluster_left_inflection_distance_from_top - extension_dim.y/2 + 10,
+    0
+    ]){
+    // Extend out from board.
+    cube([extension_dim.x,extension_dim.y,base_thickness]);
+    // Extend up, to brace against bracket.
+    cube([plug_wall_thickness,extension_dim.y, plug_width]);
+    // Create a plug into the bracket.
+    translate([-bracket_hole_depth + overlap,
+            extension_dim.y/2 - plug_len/2,
+            bracket_width/2 - bracket_hole_width/2 + base_thickness
+        ])
+        cube([bracket_hole_depth, plug_len, bracket_hole_width]);
     }
 }

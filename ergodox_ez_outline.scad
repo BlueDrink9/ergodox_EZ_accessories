@@ -21,6 +21,8 @@ thumb_cluster_width = 73.7;
 // Bottom-most edge
 thumb_cluster_length = 95.8;
 thumb_cluster_right_inflection_len_from_right_side = 85.5;
+// Busting back out the high school trig, wow.
+thumb_cluster_left_inflection_distance_from_top = main_board_length - (cos(180-thumb_cluster_angle_away_from_left_side) * thumb_cluster_width);
 
 top_legs_distance_from_top = 44;
 
