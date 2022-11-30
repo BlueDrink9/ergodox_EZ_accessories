@@ -53,7 +53,9 @@ bracket_tunnel_height = function(tunnel_width, wall_thickness)
 // Main baseplate
 translate([0,-main_board_length,0]){
     difference(){
-        ergodox_outline(base_thickness = 3, square_off_tops=true);
+        linear_extrude(base_thickness){
+            ergodox_outline(square_off_tops=true);
+        }
         long_top_foot_holes();
     }
 }

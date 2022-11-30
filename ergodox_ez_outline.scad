@@ -34,7 +34,7 @@ foot_top_left_dist_from_left_edge = 17.92;
 // Thumb cluster foot
 foot_bottom_left_dist_from_left_edge = -24.82;
 
-module ergodox_outline(base_thickness=base_thickness, square_off_tops=false){
+module ergodox_outline(square_off_tops=false){
 
     module board_base(){
         main_base();
@@ -51,28 +51,27 @@ module ergodox_outline(base_thickness=base_thickness, square_off_tops=false){
             hull(){
                 // rounded end
                 translate([thumb_cluster_corner_radius,thumb_cluster_length-thumb_cluster_corner_radius,0]){
-                    cylinder(r=thumb_cluster_corner_radius, h=base_thickness);
+                    circle(r=thumb_cluster_corner_radius);
                     translate([thumb_cluster_width-2*thumb_cluster_corner_radius,0]){
-                        cylinder(r=thumb_cluster_corner_radius, h=base_thickness);
+                        circle(r=thumb_cluster_corner_radius);
                     }
                 }
                 // Main part of cluster
                 translate([0, 0, 0]){
-                    cube([thumb_cluster_width,
-                            thumb_cluster_length-thumb_cluster_corner_radius,
-                            base_thickness]);
+                    square([thumb_cluster_width,
+                            thumb_cluster_length-thumb_cluster_corner_radius]);
                 }
             }
         }
 
         module main_base(){
             hull(){
-                // Bottoms - one cylinder is irrelevant, hidden within the thumb
+                // Bottoms - one circle is irrelevant, hidden within the thumb
                 // cluster - but something needs to be there to finish the hull.
                 for (trans_x = [board_width_top - bottom_right_board_corner_radius,
                         bottom_right_board_corner_radius]){
                     translate([trans_x, bottom_right_board_corner_radius, 0]){
-                        cylinder(r=bottom_right_board_corner_radius, h=base_thickness);
+                        circle(r=bottom_right_board_corner_radius);
                     }
                 }
                 // Tops
@@ -83,12 +82,11 @@ module ergodox_outline(base_thickness=base_thickness, square_off_tops=false){
                             // For if you are adding something else to the
                             // top (eg a bracket)
                             translate([-top_right_board_corner_radius, 0, 0])
-                                cube([
+                                square([
                                     top_right_board_corner_radius*2,
-                                    top_right_board_corner_radius*2,
-                                    base_thickness]);
+                                    top_right_board_corner_radius*2]);
                         }else{
-                            cylinder(r=top_right_board_corner_radius, h=base_thickness);
+                            circle(r=top_right_board_corner_radius);
                         }
                     }
                 }
@@ -116,7 +114,7 @@ module ergodox_outline(base_thickness=base_thickness, square_off_tops=false){
                     main_board_length - position.y,
                     -overlap
             ]){
-                cylinder(r=foot_radius, h=base_thickness+2*overlap);
+                circle(r=foot_radius);
             }
         }
 
