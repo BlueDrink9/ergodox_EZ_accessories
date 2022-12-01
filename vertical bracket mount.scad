@@ -46,8 +46,6 @@ support_strut_right_width = 30;
 support_strut_center_width = 22;
 support_strut_center_distance_from_right = 82.5;
 
-cord_channel_width = 5;
-
 bracket_tunnel_height = function(tunnel_width, wall_thickness)
     tunnel_height + 2 * wall_thickness;
 
@@ -78,20 +76,15 @@ color("green"){
     }
 }
 
-difference(){
-    union(){
-        color("blue"){
-            supports();
-        }
-        color("purple"){
-            // rotate([-1,0,0]){
-            top_coverplate();
-            // }
-        }
-        walls();
-    }
-    cord_channel();
+color("blue"){
+    supports();
 }
+color("purple"){
+    // rotate([-1,0,0]){
+    top_coverplate();
+    // }
+}
+walls();
 
 brace_against_vertical();
 
@@ -256,13 +249,5 @@ module brace_against_vertical(){
                 bracket_width/2 - bracket_hole_width/2 + base_thickness
         ])
             cube([bracket_hole_depth, plug_len, bracket_hole_width]);
-    }
-}
-
-module cord_channel(){
-    translate([-wall_thickness-overlap, cord_gap - cord_channel_width, base_thickness - overlap]){
-        cube([support_strut_left_width + wall_thickness + 2*overlap,
-                cord_channel_width,
-                wall_height + cover_thickness + 2*overlap]);
     }
 }
