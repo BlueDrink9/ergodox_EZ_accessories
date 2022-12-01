@@ -235,19 +235,19 @@ module brace_against_vertical(){
     bracket_hole_width = 5;
     bracket_hole_depth = 3 + 0.5;
     translate([
-    -extension_dim.x + overlap,
-    -thumb_cluster_left_inflection_distance_from_back - extension_dim.y/2 + 10,
-    0
+            -extension_dim.x + overlap,
+            -thumb_cluster_left_inflection_distance_from_back - extension_dim.y/2 + 10,
+            0
     ]){
-    // Extend out from board.
-    cube([extension_dim.x,extension_dim.y,base_thickness]);
-    // Extend up, to brace against bracket.
-    cube([plug_wall_thickness,extension_dim.y, plug_width]);
-    // Create a plug into the bracket.
-    translate([-bracket_hole_depth + overlap,
-            extension_dim.y/2 - plug_len/2,
-            bracket_width/2 - bracket_hole_width/2 + base_thickness
+        // Extend out from board.
+        cube([extension_dim.x,extension_dim.y,base_thickness]);
+        // Extend up, to brace against bracket.
+        cube([plug_wall_thickness,extension_dim.y, plug_width]);
+        // Create a plug into the bracket.
+        translate([-bracket_hole_depth + overlap,
+                extension_dim.y/2 - plug_len/2,
+                bracket_width/2 - bracket_hole_width/2 + base_thickness
         ])
-        cube([bracket_hole_depth, plug_len, bracket_hole_width]);
+            cube([bracket_hole_depth, plug_len, bracket_hole_width]);
     }
 }
