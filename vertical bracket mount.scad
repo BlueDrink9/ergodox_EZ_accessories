@@ -18,9 +18,9 @@ keyboard_height = 22.5;
 wall_height = keyboard_height + 1;
 base_thickness = 3;
 cover_thickness = 2;
-mount_wall_thickness = 3;
+wall_thickness = 3;
 
-mount_width = board_width_back + 2 * mount_wall_thickness;
+mount_width = board_width_back + 2 * wall_thickness;
 
 side_wall_length = 44;
 // Determines how long the supports are
@@ -46,6 +46,8 @@ support_strut_right_width = 30;
 support_strut_center_width = 22;
 support_strut_center_distance_from_right = 82.5;
 
+cord_channel_width = 5;
+
 bracket_tunnel_height = function(tunnel_width, wall_thickness)
     tunnel_height + 2 * wall_thickness;
 
@@ -62,13 +64,13 @@ translate([0,-main_board_length,0]){
 }
 
 // baseplate_extension_behind_cords
-translate ([-mount_wall_thickness, -overlap, 0]){
+translate ([-wall_thickness, -overlap, 0]){
     cube([mount_width, cord_gap, base_thickness]);
 }
 
 // Bracket tunnel
 color("green"){
-    translate ([-mount_wall_thickness, cord_gap-overlap,
+    translate ([-wall_thickness, cord_gap-overlap,
             0]){
         rotate ([180,-90,90]){
             bracket_tunnel();
@@ -76,15 +78,20 @@ color("green"){
     }
 }
 
-color("blue"){
-    supports();
+difference(){
+    union(){
+        color("blue"){
+            supports();
+        }
+        color("purple"){
+            // rotate([-1,0,0]){
+            top_coverplate();
+            // }
+        }
+        walls();
+    }
+    cord_channel();
 }
-color("purple"){
-// rotate([-1,0,0]){
-    back_coverplate();
-// }
-}
-walls();
 
 brace_against_vertical();
 
@@ -101,7 +108,7 @@ module bracket_tunnel(
         length=mount_width,
         tunnel_height=tunnel_height,
         tunnel_width=tunnel_width,
-        wall_thickness=mount_wall_thickness,
+        wall_thickness=wall_thickness,
         ){
 
     width = tunnel_width + 2 * wall_thickness;
@@ -119,12 +126,12 @@ module bracket_tunnel(
 
 module supports(){
     support_widths = [
-        support_strut_left_width + mount_wall_thickness,
+        support_strut_left_width + wall_thickness,
         support_strut_center_width,
-        support_strut_right_width + mount_wall_thickness,
+        support_strut_right_width + wall_thickness,
     ];
     support_distances_from_left = [
-        -mount_wall_thickness,
+        -wall_thickness,
         board_width_back - support_strut_center_width - support_strut_center_distance_from_right,
         board_width_back - support_strut_right_width,
     ];
@@ -136,9 +143,9 @@ module supports(){
 };
 
 
-module back_coverplate(){
+module top_coverplate(){
     translate ([
-            -mount_wall_thickness,
+            -wall_thickness,
             -coverable_part_of_back_length + 2*overlap,
             wall_height + base_thickness - overlap,
     ]){
@@ -151,18 +158,18 @@ module back_coverplate(){
     translate ([
             0,
             overlap,
-            wall_height + overlap,
+            wall_height - overlap,
     ]){
         intersection(){
             supports();
-            translate ([-mount_wall_thickness, 0, base_thickness]){
+            translate ([-wall_thickness, 0, base_thickness]){
                 cube([mount_width, cord_gap, cover_thickness]);
             }
         }
     }
     // Round the inner edge so the cords can slide over it easier
     translate ([
-            -mount_wall_thickness,
+            -wall_thickness,
             2*overlap,
             wall_height + 2*cover_thickness - overlap,
     ]){
@@ -186,13 +193,13 @@ module led_window(){
 
 
 module walls(){
-    for (x_offset = [-mount_wall_thickness+overlap, board_width_back - overlap]){
+    for (x_offset = [-wall_thickness+overlap, board_width_back - overlap]){
         translate([x_offset, 0,0]){
             rotate([180,270,0]){
                 cube([
-                        wall_height + mount_wall_thickness,
+                        wall_height + wall_thickness,
                         coverable_part_of_back_length-overlap,
-                        mount_wall_thickness
+                        wall_thickness
                 ]);
             }
         }
@@ -249,5 +256,13 @@ module brace_against_vertical(){
                 bracket_width/2 - bracket_hole_width/2 + base_thickness
         ])
             cube([bracket_hole_depth, plug_len, bracket_hole_width]);
+    }
+}
+
+module cord_channel(){
+    translate([-wall_thickness-overlap, cord_gap - cord_channel_width, base_thickness - overlap]){
+        cube([support_strut_left_width + wall_thickness + 2*overlap,
+                cord_channel_width,
+                wall_height + cover_thickness + 2*overlap]);
     }
 }
