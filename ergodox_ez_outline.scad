@@ -2,46 +2,46 @@ $fa=1;
 $fs=0.4;
 // Orientations are designed for the right hand keyboard.
 // Looking at it straight and flat on a desk with the thumb cluster closest to you, and the LEDs furthest from you.
-// The top is the LED cluster end.
+// The back is the LED cluster end.
 // The height is from the desk up.
 // The width is from left to right.
 // x = width, y = length, z = height
-// Origin is at bottom right corner of the keyboard
+// Origin is at front right corner of the keyboard
 
 overlap = 0.01;
-board_width_top = 159.5;
+board_width_back = 159.5;
 main_board_length = 133.85;
 
-bottom_right_board_corner_radius = 42.14/2;
-top_right_board_corner_radius = 12.45;
+front_right_board_corner_radius = 42.14/2;
+back_right_board_corner_radius = 12.45;
 thumb_cluster_corner_radius = 21.8;
 thumb_cluster_angle_away_from_left_side = 115;
 // Far left edge
 thumb_cluster_width = 73.7;
-// Bottom-most edge
+// front-most edge
 thumb_cluster_length = 95.8;
 thumb_cluster_right_inflection_len_from_right_side = 85.5;
 // Busting back out the high school trig, wow.
-thumb_cluster_left_inflection_distance_from_top = main_board_length - (cos(180-thumb_cluster_angle_away_from_left_side) * thumb_cluster_width);
+thumb_cluster_left_inflection_distance_from_back = main_board_length - (cos(180-thumb_cluster_angle_away_from_left_side) * thumb_cluster_width);
 
-top_legs_distance_from_top = 44;
+back_legs_distance_from_back = 44;
 
 foot_radius = 5.5;
-// the top 2 feet share position on Y with one-another, as do the bottom 2.
+// the back 2 feet share position on Y with one-another, as do the front 2.
 // the right two feet share their X position.
-feet_top_dist_from_top_edge = 19.22;
+feet_back_dist_from_back_edge = 19.22;
 feet_right_dist_from_left_edge = 141.65;
-feet_bottom_dist_from_top_edge = 122.14;
-foot_top_left_dist_from_left_edge = 17.92;
+feet_front_dist_from_back_edge = 122.14;
+foot_back_left_dist_from_left_edge = 17.92;
 // Thumb cluster foot
-foot_bottom_left_dist_from_left_edge = -24.82;
+foot_front_left_dist_from_left_edge = -24.82;
 
-module ergodox_outline(square_off_tops=false){
+module ergodox_outline(square_off_backs=false){
 
     module board_base(){
         main_base();
         // Thumb cluster
-        translate([board_width_top - thumb_cluster_right_inflection_len_from_right_side, -0,0]){
+        translate([board_width_back - thumb_cluster_right_inflection_len_from_right_side, -0,0]){
             rotate([0,0,thumb_cluster_angle_away_from_left_side]){
                 thumb_cluster();
             }
@@ -68,27 +68,27 @@ module ergodox_outline(square_off_tops=false){
 
         module main_base(){
             hull(){
-                // Bottoms - one circle is irrelevant, hidden within the thumb
+                // fronts - one circle is irrelevant, hidden within the thumb
                 // cluster - but something needs to be there to finish the hull.
-                for (trans_x = [board_width_top - bottom_right_board_corner_radius,
-                        bottom_right_board_corner_radius]){
-                    translate([trans_x, bottom_right_board_corner_radius, 0]){
-                        circle(r=bottom_right_board_corner_radius);
+                for (trans_x = [board_width_back - front_right_board_corner_radius,
+                        front_right_board_corner_radius]){
+                    translate([trans_x, front_right_board_corner_radius, 0]){
+                        circle(r=front_right_board_corner_radius);
                     }
                 }
-                // Tops
-                for (trans_x = [board_width_top - top_right_board_corner_radius,
-                        top_right_board_corner_radius]){
-                    translate([trans_x, main_board_length  - top_right_board_corner_radius, 0]){
-                        if(square_off_tops){
+                // backs
+                for (trans_x = [board_width_back - back_right_board_corner_radius,
+                        back_right_board_corner_radius]){
+                    translate([trans_x, main_board_length  - back_right_board_corner_radius, 0]){
+                        if(square_off_backs){
                             // For if you are adding something else to the
-                            // top (eg a bracket)
-                            translate([-top_right_board_corner_radius, 0, 0])
+                            // back (eg a bracket)
+                            translate([-back_right_board_corner_radius, 0, 0])
                                 square([
-                                    top_right_board_corner_radius*2,
-                                    top_right_board_corner_radius*2]);
+                                    back_right_board_corner_radius*2,
+                                    back_right_board_corner_radius*2]);
                         }else{
-                            circle(r=top_right_board_corner_radius);
+                            circle(r=back_right_board_corner_radius);
                         }
                     }
                 }
@@ -97,19 +97,19 @@ module ergodox_outline(square_off_tops=false){
     }
 
     module foot_holes(){
-        tops = [
-            // top left
-            [foot_top_left_dist_from_left_edge, feet_top_dist_from_top_edge],
-            // top right
-            [feet_right_dist_from_left_edge, feet_top_dist_from_top_edge]
+        backs = [
+            // back left
+            [foot_back_left_dist_from_left_edge, feet_back_dist_from_back_edge],
+            // back right
+            [feet_right_dist_from_left_edge, feet_back_dist_from_back_edge]
         ];
-        bottoms = [
-            // bottom left/thumb cluster
-            [foot_bottom_left_dist_from_left_edge, feet_bottom_dist_from_top_edge],
-            // bottom right
-            [feet_right_dist_from_left_edge, feet_bottom_dist_from_top_edge]
+        fronts = [
+            // front left/thumb cluster
+            [foot_front_left_dist_from_left_edge, feet_front_dist_from_back_edge],
+            // front right
+            [feet_right_dist_from_left_edge, feet_front_dist_from_back_edge]
         ];
-        positions = concat(tops, bottoms);
+        positions = concat(backs, fronts);
         for(position = positions){
             translate([
                     position.x,
