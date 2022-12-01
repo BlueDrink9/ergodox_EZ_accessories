@@ -92,6 +92,7 @@ color("red"){
     translate([0,0,-30]){
     // brace_against_vertical();
 
+        // rotate([0, 90, 0]) cylinder(h=mount_width, d=cover_thickness, $fn=8);
     }
 }
 
@@ -139,7 +140,7 @@ module top_coverplate(){
     translate ([
             -mount_wall_thickness,
             -coverable_part_of_top_length + 2*overlap,
-            wall_height + mount_wall_thickness - overlap,
+            wall_height + base_thickness - overlap,
     ]){
         difference(){
             cube([mount_width, coverable_part_of_top_length, cover_thickness]);
@@ -159,6 +160,15 @@ module top_coverplate(){
             }
         }
     }
+    // Round the inner edge so the cords can slide over it easier
+    translate ([
+            -mount_wall_thickness,
+            2*overlap,
+            wall_height + 2*cover_thickness - overlap,
+    ]){
+        rotate([0, 90, 0]) cylinder(h=mount_width, d=cover_thickness, $fn=8);
+    }
+
 }
 
 module led_window(){
