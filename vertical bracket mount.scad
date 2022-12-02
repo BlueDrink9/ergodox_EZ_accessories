@@ -9,12 +9,8 @@ use <tapered_dovetail.scad>;
 // The height is from the desk up.
 // The width is from left to right.
 // x = width, y = length, z = height
-// Origin is at back left corner of the keyboard (tunnel in past origin)
+// Origin is at back left corner of the keyboard (tunnel is beyond origin)
 
-// TODO separate off the back plate, add a joint of some sort.
-// overlap = 0.001;
-// board_width_back = 159.5;
-// main_board_length = 133.85;
 keyboard_height = 22.5;
 wall_height = keyboard_height + 1;
 base_thickness = 3;
@@ -92,9 +88,7 @@ difference(){
     cord_channel();
 }
 color("purple"){
-    // rotate([-1,0,0]){
     top_coverplate();
-    // }
 }
 
 brace_against_vertical();
@@ -132,20 +126,28 @@ module bracket_tunnel(
 }
 
 module supports(){
-    support_widths = [
-        support_strut_left_width + wall_thickness,
-        support_strut_center_width,
-        support_strut_right_width + wall_thickness,
-    ];
-    support_distances_from_left = [
-        -wall_thickness,
-        support_strut_center_distance_from_left - support_strut_center_width,
-        board_width_back - support_strut_right_width,
-    ];
-    for(i=[0:2]){
-        translate ([support_distances_from_left[i], 0, base_thickness-overlap]){
-            cube([support_widths[i], cord_gap, wall_height]);
+    difference(){
+        union(){
+            support_widths = [
+                support_strut_left_width + wall_thickness,
+            support_strut_center_width,
+            support_strut_right_width + wall_thickness,
+            ];
+            support_distances_from_left = [
+                -wall_thickness,
+                support_strut_center_distance_from_left - support_strut_center_width,
+                board_width_back - support_strut_right_width,
+            ];
+            for(i=[0:2]){
+                translate ([support_distances_from_left[i], 0, base_thickness-overlap]){
+                    cube([support_widths[i], cord_gap, wall_height]);
+                }
+            }
         }
+
+        // subtract the teeth
+        translate([0, -overlap*2, base_thickness+wall_height+overlap])
+            scale([1,1+overlap*1, 1]) dovetail_teeth(tolerance=[1.05, 1.02]);
     }
 };
 
@@ -196,18 +198,21 @@ module led_window(){
     }
 }
 
-module dovetail_teeth(){
+module dovetail_teeth(tolerance=[1,1]){
     module tooth(width){
-        rotate([90, 180, 180])
+        // Increate the tolearance when subtracting these to make a hole to
+        // slide them into.
+        scale([tolerance[0], 1, tolerance[1]])
+            rotate([90, 180, 180])
             tapered_dovetail_tooth(
                     width,
                     cord_gap
                     );
     }
-    // Left tooth; needs to be shorted because of the cord channel.
-    translate([support_strut_left_width/2, cord_gap/2, 0])
-        scale([1,0.5,1])
-            tooth(support_strut_left_width/2.5);
+    // Left tooth
+    translate([support_strut_left_width/2-overlap, cord_gap/2-0.1, 0])
+        // needs to be shorted because of the cord channel.
+        scale([1,0.50,1]) tooth(support_strut_left_width/2.5);
 
     // Central tooth
     translate([support_strut_center_distance_from_left - support_strut_center_width/2, 0, 0])
