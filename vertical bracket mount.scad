@@ -145,38 +145,28 @@ module supports(){
 
 
 module top_coverplate(){
-    translate ([
-            -wall_thickness,
-            -coverable_part_of_back_length + 2*overlap,
-            wall_height + base_thickness - overlap,
-    ]){
-        difference(){
-            cube([mount_width, coverable_part_of_back_length, cover_thickness]);
-            led_window();
-        }
-    }
-    // The part that covers the supports
-    translate ([
-            0,
-            overlap,
-            wall_height - overlap,
-    ]){
-        intersection(){
-            supports();
-            translate ([-wall_thickness, 0, base_thickness]){
-                cube([mount_width, cord_gap, cover_thickness]);
+    translate ([-wall_thickness,0, wall_height - overlap + base_thickness]){
+        translate ([ 0, -coverable_part_of_back_length + 2*overlap, 0, ]){
+            difference(){
+                cube([mount_width, coverable_part_of_back_length, cover_thickness]);
+                led_window();
             }
         }
-    }
-    // Round the inner edge so the cords can slide over it easier
-    translate ([
-            -wall_thickness,
-            2*overlap,
-            wall_height + 2*cover_thickness - overlap,
-    ]){
-        rotate([0, 90, 0]) cylinder(h=mount_width, d=cover_thickness, $fn=8);
-    }
+        // The part that covers the supports
+        intersection(){
+            translate ([wall_thickness,0, -base_thickness]) supports();
+            cube([mount_width, cord_gap, cover_thickness]);
+        }
+        // Round the inner edge so the cords can slide over it easier
+        translate ([
+                0,
+                2*overlap,
+                cover_thickness/2,
+        ]){
+            rotate([0, 90, 0]) cylinder(h=mount_width, d=cover_thickness, $fn=8);
+        }
 
+    }
 }
 
 module led_window(){
