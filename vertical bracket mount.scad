@@ -2,6 +2,7 @@
 // $fa=1;
 // $fs=0.4;
 include <ergodox_ez_outline.scad>;
+use <tapered_dovetail.scad>;
 // Orientations are designed for the right hand keyboard.
 // Looking at it straight and flat on a desk with the thumb cluster closest to you, and the LEDs furthest from you.
 // The back is the LED cluster end.
@@ -45,7 +46,9 @@ reset_hole_radius = 2;
 support_strut_left_width = 10;
 support_strut_right_width = 30;
 support_strut_center_width = 22;
-support_strut_center_distance_from_right = 82.5;
+// rightmost edge of center support.
+support_strut_center_distance_from_left = board_width_back - 82.5; // minus distance from right
+support_strut_right_distance_from_left = board_width_back; // rightmost edge
 
 cord_channel_width = 5;
 
@@ -96,11 +99,14 @@ color("purple"){
 
 brace_against_vertical();
 
-color("red"){
-    translate([0,0,-30]){
-    // brace_against_vertical();
 
-        // rotate([0, 90, 0]) cylinder(h=mount_width, d=cover_thickness, $fn=8);
+// Playground
+color("red"){
+    translate([0, 0,-50]){
+    // translate([wall_thickness+support_strut_left_width/2, 0,wall_height+base_thickness]){
+    // brace_against_vertical();
+        //  cylinder(h=mount_width, d=cover_thickness, $fn=8);
+    // top_coverplate();
     }
 }
 
@@ -133,7 +139,7 @@ module supports(){
     ];
     support_distances_from_left = [
         -wall_thickness,
-        board_width_back - support_strut_center_width - support_strut_center_distance_from_right,
+        support_strut_center_distance_from_left - support_strut_center_width,
         board_width_back - support_strut_right_width,
     ];
     for(i=[0:2]){
@@ -153,10 +159,10 @@ module top_coverplate(){
             }
         }
         // The part that covers the supports
-        intersection(){
-            translate ([wall_thickness,0, -base_thickness]) supports();
-            cube([mount_width, cord_gap, cover_thickness]);
-        }
+            intersection(){
+                translate ([wall_thickness,0, -base_thickness]) supports();
+                cube([mount_width, cord_gap, cover_thickness]);
+            }
         // Round the inner edge so the cords can slide over it easier
         translate ([
                 0,
@@ -166,6 +172,14 @@ module top_coverplate(){
             rotate([0, 90, 0]) cylinder(h=mount_width, d=cover_thickness, $fn=8);
         }
 
+        // Dovetail joins into the support strut
+        translate ([
+                wall_thickness,
+                0,
+                overlap,
+        ]){
+            dovetail_teeth();
+        }
     }
 }
 
@@ -182,6 +196,26 @@ module led_window(){
     }
 }
 
+module dovetail_teeth(){
+    module tooth(width){
+        rotate([90, 180, 180])
+            tapered_dovetail_tooth(
+                    width,
+                    cord_gap
+                    );
+    }
+    // Left tooth; needs to be shorted because of the cord channel.
+    translate([support_strut_left_width/2, cord_gap/2, 0])
+        scale([1,0.5,1])
+            tooth(support_strut_left_width/2.5);
+
+    // Central tooth
+    translate([support_strut_center_distance_from_left - support_strut_center_width/2, 0, 0])
+        tooth(support_strut_center_width/2.5);
+    // Right tooth
+    translate([support_strut_right_distance_from_left - support_strut_right_width/2, 0, 0])
+        tooth(support_strut_center_width/2.5);
+}
 
 module walls(){
     for (x_offset = [-wall_thickness+overlap, board_width_back - overlap]){
