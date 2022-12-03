@@ -53,46 +53,66 @@ bracket_tunnel_height = function(tunnel_width, wall_thickness)
 
 // }
 
-// Main baseplate
-translate([0,-main_board_length,0]){
-    difference(){
-        linear_extrude(base_thickness){
-            ergodox_outline(square_off_backs=true);
+module lower_half(){
+        // Main baseplate
+        translate([0,-main_board_length,0]){
+            difference(){
+                linear_extrude(base_thickness){
+                    ergodox_outline(square_off_backs=true);
+                }
+                long_back_foot_holes();
+            }
         }
-        long_back_foot_holes();
+
+        // baseplate_extension_behind_cords
+        translate ([-wall_thickness, -overlap, 0]){
+            cube([mount_width, cord_gap, base_thickness]);
+        }
+
+        // Bracket tunnel
+        color("green"){
+            translate ([-wall_thickness, cord_gap-overlap,
+                    0]){
+                rotate ([180,-90,90]){
+                    bracket_tunnel();
+                }
+            }
+        }
+
+        difference(){
+            union(){
+                color("blue"){
+                    supports();
+                }
+                walls();
+            }
+            cord_channel();
+        }
+
+        brace_against_vertical();
+}
+
+
+module bracket_mount(){
+    lower_half();
+    color("purple"){
+        top_coverplate();
     }
 }
 
-// baseplate_extension_behind_cords
-translate ([-wall_thickness, -overlap, 0]){
-    cube([mount_width, cord_gap, base_thickness]);
-}
+bracket_mount();
 
-// Bracket tunnel
-color("green"){
-    translate ([-wall_thickness, cord_gap-overlap,
-            0]){
-        rotate ([180,-90,90]){
-            bracket_tunnel();
-        }
-    }
-}
+// // For printing: Tops
+// translate([0,0, (wall_height - overlap + base_thickness + cover_thickness)])
+// rotate([0,180]){
+//     translate([0, -60, 0]) mirror([0,1,0]) top_coverplate();
+//     top_coverplate();
+// }
 
-difference(){
-    union(){
-        color("blue"){
-            supports();
-        }
-        walls();
-    }
-    cord_channel();
-}
-color("purple"){
-    top_coverplate();
-}
-
-brace_against_vertical();
-
+// Bottoms
+// translate([0, cord_gap + tunnel_width*2, 0]) mirror([0,1,0]) lower_half();
+// lower_half();
+// mirror() bracket_mount();
 
 // Playground
 color("red"){
