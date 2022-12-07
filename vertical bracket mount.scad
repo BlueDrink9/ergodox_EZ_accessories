@@ -20,7 +20,7 @@ wall_thickness = 3;
 mount_width = board_width_back + 2 * wall_thickness;
 
 // Determines how long the supports are
-cord_gap = 23;
+cord_gap = 21;
 coverable_part_of_back_length = 26;
 // side_wall_length = back_legs_distance_from_back;
 side_wall_length = coverable_part_of_back_length;
@@ -114,7 +114,7 @@ module lower_half(){
             cord_channel();
         }
 
-        brace_against_vertical();
+        // brace_against_vertical();
 }
 
 
