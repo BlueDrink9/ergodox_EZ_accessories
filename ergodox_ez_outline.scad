@@ -14,7 +14,8 @@ main_board_length = 133.85;
 
 front_right_board_corner_radius = 42.14/2;
 back_right_board_corner_radius = 12.45;
-thumb_cluster_corner_radius = 21.8;
+// thumb_cluster_corner_radius = 21.8;
+thumb_cluster_corner_radius = 10.92;
 thumb_cluster_angle_away_from_left_side = 115;
 // Far left edge
 thumb_cluster_width = 73.7;
