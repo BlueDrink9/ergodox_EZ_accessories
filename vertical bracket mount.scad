@@ -53,6 +53,31 @@ bracket_tunnel_height = function(tunnel_width, wall_thickness)
 
 // }
 
+// bracket_mount();
+
+// // For printing: Tops
+// translate([0,0, (wall_height - overlap + base_thickness + cover_thickness)])
+// rotate([0,180]){
+//     translate([0, -60, 0]) mirror([0,1,0]) top_coverplate();
+//     top_coverplate();
+// }
+
+// Bottoms
+// translate([0, cord_gap + tunnel_width*2, 0]) mirror([0,1,0]) lower_half();
+lower_half();
+// mirror() bracket_mount();
+
+// Playground
+color("red"){
+    translate([0, 0,-50]){
+    // translate([wall_thickness+support_strut_left_width/2, 0,wall_height+base_thickness]){
+    // brace_against_vertical();
+        //  cylinder(h=mount_width, d=cover_thickness, $fn=8);
+    // top_coverplate();
+    }
+}
+
+
 module lower_half(){
         // Main baseplate
         translate([0,-main_board_length,0]){
@@ -97,30 +122,6 @@ module bracket_mount(){
     lower_half();
     color("purple"){
         top_coverplate();
-    }
-}
-
-bracket_mount();
-
-// // For printing: Tops
-// translate([0,0, (wall_height - overlap + base_thickness + cover_thickness)])
-// rotate([0,180]){
-//     translate([0, -60, 0]) mirror([0,1,0]) top_coverplate();
-//     top_coverplate();
-// }
-
-// Bottoms
-// translate([0, cord_gap + tunnel_width*2, 0]) mirror([0,1,0]) lower_half();
-// lower_half();
-// mirror() bracket_mount();
-
-// Playground
-color("red"){
-    translate([0, 0,-50]){
-    // translate([wall_thickness+support_strut_left_width/2, 0,wall_height+base_thickness]){
-    // brace_against_vertical();
-        //  cylinder(h=mount_width, d=cover_thickness, $fn=8);
-    // top_coverplate();
     }
 }
 
