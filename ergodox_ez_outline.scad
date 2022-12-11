@@ -11,6 +11,8 @@ $fs=0.4;
 overlap = 0.01;
 board_width_back = 159.5;
 main_board_length = 133.85;
+// Not used, but useful for importing
+keyboard_height = 22.5;
 
 front_right_board_corner_radius = 42.14/2;
 back_right_board_corner_radius = 12.45;

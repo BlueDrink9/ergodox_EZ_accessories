@@ -11,7 +11,6 @@ use <tapered_dovetail.scad>;
 // x = width, y = length, z = height
 // Origin is at back left corner of the keyboard (tunnel is beyond origin)
 
-keyboard_height = 22.5;
 wall_height = keyboard_height + 1;
 base_thickness = 3.9;
 cover_thickness = 2;
