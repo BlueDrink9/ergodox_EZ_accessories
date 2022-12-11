@@ -13,14 +13,14 @@ use <tapered_dovetail.scad>;
 
 keyboard_height = 22.5;
 wall_height = keyboard_height + 1;
-base_thickness = 3;
+base_thickness = 3.9;
 cover_thickness = 2;
 wall_thickness = 3;
 
 mount_width = board_width_back + 2 * wall_thickness;
 
 // Determines how long the supports are
-cord_gap = 21;
+cord_gap = 23;
 coverable_part_of_back_length = 26;
 // side_wall_length = back_legs_distance_from_back;
 side_wall_length = coverable_part_of_back_length;
@@ -56,16 +56,22 @@ bracket_tunnel_height = function(tunnel_width, wall_thickness)
 // bracket_mount();
 
 // // For printing: Tops
-// translate([0,0, (wall_height - overlap + base_thickness + cover_thickness)])
-// rotate([0,180]){
-//     translate([0, -60, 0]) mirror([0,1,0]) top_coverplate();
-//     top_coverplate();
-// }
+// Printing sideways so that the teeth have more strength (not relying on layer adhesion). Support shouldn't be an issue to remove for the teeth. Can bridge the holes.
+mirror([0,1,0]) translate([0,15, coverable_part_of_back_length])
+    rotate([90,0,0]) top_coverplate();
+translate([0,20, coverable_part_of_back_length])
+    rotate([90,0,0]) top_coverplate();
 
 // Bottoms
 // translate([0, cord_gap + tunnel_width*2, 0]) mirror([0,1,0]) lower_half();
-lower_half();
+// lower_half();
 // mirror() bracket_mount();
+
+// Overlap with the supports to change the infill
+// translate ([-wall_thickness, 0, base_thickness-overlap]){
+//      cube([mount_width, cord_gap, wall_height-8]);
+// }
+
 
 // Playground
 color("red"){
@@ -114,7 +120,7 @@ module lower_half(){
             cord_channel();
         }
 
-        // brace_against_vertical();
+        brace_against_vertical();
 }
 
 
