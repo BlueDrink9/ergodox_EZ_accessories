@@ -52,14 +52,14 @@ bracket_tunnel_height = function(tunnel_width, wall_thickness)
 
 // }
 
-// bracket_mount();
+bracket_mount();
 
-// // For printing: Tops
-// Printing sideways so that the teeth have more strength (not relying on layer adhesion). Support shouldn't be an issue to remove for the teeth. Can bridge the holes.
-mirror([0,1,0]) translate([0,15, coverable_part_of_back_length])
-    rotate([90,0,0]) top_coverplate();
-translate([0,20, coverable_part_of_back_length])
-    rotate([90,0,0]) top_coverplate();
+// // // For printing: Tops
+// // Printing sideways so that the teeth have more strength (not relying on layer adhesion). Support shouldn't be an issue to remove for the teeth. Can bridge the holes.
+// mirror([0,1,0]) translate([0,15, coverable_part_of_back_length])
+//     rotate([90,0,0]) top_coverplate();
+// translate([0,20, coverable_part_of_back_length])
+//     rotate([90,0,0]) top_coverplate();
 
 // Bottoms
 // translate([0, cord_gap + tunnel_width*2, 0]) mirror([0,1,0]) lower_half();

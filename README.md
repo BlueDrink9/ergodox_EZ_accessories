@@ -11,15 +11,34 @@ There is also a slice folder with my Cura slicing settings. Choices made may be 
 
 ### Vertical bracket mount
 
+Totally rethinking ultimate keyboard ergonomics. Obtain a fully neutral shoulder angle, at minimal expense.
+
 Designed to slide onto an L bracket, allowing the keyboard to be used with your arms hanging fully vertically down (most useful when standing).
 Example images to come later, once prototyping is complete.
+
+Prints in 3 pieces: tops, left bottom, right bottom. Joints without glue, easily disassembled.
+
+#### Slice notes
+
+Benefits from high infill to increase ridgidity. I went with 60% in gyroid patten. Also recommend thick (1.5mm) walls. It actually isn't that expensive time-wise because that means most of the walls don't have infill but can just be done back and forth.
 
 ### Upright bracket
 
 A less radical design, intended to enable extreme tilting of 60º+.
-Redesign of https://www.thingiverse.com/thing:3207945 and https://www.thingiverse.com/thing:2748084.
+Redesign with much better dimensional accuracy of https://www.thingiverse.com/thing:3207945 and https://www.thingiverse.com/thing:2748084.
 My redesign is more customisable (you can change the angle, wall and base thicknesses, wall height), which also gives it much-needed strength compared to the other designs.
 
 Intended to be held on the desk or armrest with some variant of [this clamp](https://www.thingiverse.com/thing:3075868), although the sockets for the clamp can be disabled with a parameter.
 
 Again, photo examples are on their way.
+
+#### Slice notes
+
+Needs a decent infill, otherwise the walls may snap. The limiting factor is layer adhesion, so do what you can when slicing to increase it and you should be fine.
+Unlike the projects is is based off, it minimises thin extensions that I found were very likely to snap.
+
+## Build
+
+Probably need to install [BOSL2](https://github.com/revarbat/BOSL2)
+
+Then open the .scad files in OpenSCAD.

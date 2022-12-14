@@ -3,7 +3,7 @@
 // This file models the right side. Mirror for left.
 // Inspired/based off https://www.thingiverse.com/thing:3207945/comments
 // and https://www.thingiverse.com/thing:2748084
-include <Ergodox-EZ vertical mount/ergodox_ez_outline.scad>;
+include <ergodox_ez_outline.scad>;
 use <BOSL2/std.scad>;
 
 overlap = 0.01;
