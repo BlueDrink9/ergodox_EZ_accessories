@@ -10,7 +10,7 @@ $fs=0.4;
 
 overlap = 0.01;
 board_width_back = 159.5;
-main_board_length = 133.85;
+main_board_length = 133.8;
 // Not used, but useful for importing
 keyboard_height = 22.5;
 
@@ -32,12 +32,13 @@ back_legs_distance_from_back = 44;
 foot_radius = 5.5;
 // the back 2 feet share position on Y with one-another, as do the front 2.
 // the right two feet share their X position.
-feet_back_dist_from_back_edge = 19.22;
-feet_right_dist_from_left_edge = 141.65;
-feet_front_dist_from_back_edge = 122.14;
-foot_back_left_dist_from_left_edge = 17.92;
+// Distance is to center of foot radius
+feet_back_dist_from_back_edge = 19.2;
+feet_front_dist_from_back_edge = 122.1;
+feet_right_dist_from_left_edge = 141.7;
+foot_back_left_dist_from_left_edge = 17.9;
 // Thumb cluster foot
-foot_front_left_dist_from_left_edge = -24.82;
+foot_front_left_dist_from_left_edge = -24.8;
 
 module ergodox_outline(square_off_backs=false){
 
