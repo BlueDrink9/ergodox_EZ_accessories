@@ -12,7 +12,7 @@ upright_bracket();
 module upright_bracket(
         // Inner = the side of the base pointing towards the other keyboard.
         base_inner_width = 50,
-        base_outer_width = 20,
+        base_outer_width = 0,
         base_thickness = 3,
         wall_inner_thickness = 4,
         wall_outer_thickness = 3,
@@ -62,9 +62,17 @@ module upright_bracket(
     }
 
     module base(){
-        left(base_outer_width)
-            cube([base_outer_width, main_board_length, base_thickness]);
-        cube([keyboard_height + base_inner_width, main_board_length, base_thickness]);
+        // Outer base + base under outer wall
+        outer_width = base_outer_width + wall_outer_thickness;
+        left(outer_width)
+            cube([outer_width,
+                    main_board_length,
+                    base_thickness]);
+        // Inner base + base under keyboard
+        cube([
+                keyboard_height + base_inner_width,
+                main_board_length,
+                base_thickness]);
     }
 
 
@@ -138,14 +146,16 @@ module upright_bracket(
     }
 
     module base_rest(){
-        height_correction_factor = keyboard_height/tan(tilt_angle);
+        angle_against_inner_wall = 180 - tilt_angle - 90;
+        prism_height = sin(angle_against_inner_wall) * keyboard_height;
+        prism_peak_x = cos(angle_against_inner_wall) * keyboard_height;
         rotate([90,0,0]) linear_extrude(base_rest_thickness)
-        polygon([
-            [0,0],
-            [wall_distance_apart, 0],
-            [skew*height_correction_factor, height_correction_factor],
+            polygon([
+                    [0,0],
+                    [wall_distance_apart, 0],
+                    [wall_distance_apart - prism_peak_x, prism_height],
 
-        ]);
+            ]);
 
         /* prismoid(size1=[keyboard_height, base_rest_thickness], size2=[0, base_rest_thickness], h=height_correction_factor); */
     }
