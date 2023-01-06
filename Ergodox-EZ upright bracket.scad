@@ -56,9 +56,11 @@ module upright_bracket(
         }
     }
 
-    color("purple") translate([0, base_rest_thickness, base_thickness-overlap]){
-        base_rest();
-        back(main_board_length - base_rest_thickness) base_rest();
+    color("purple") translate([0, 0, base_thickness-overlap]){
+        // Offset by 25 to put closer to board middle, rather than the ends
+        // where the board has rounded corners.
+        back(base_rest_thickness + 25) base_rest();
+        back(main_board_length - 25) base_rest();
     }
 
     module base(){
