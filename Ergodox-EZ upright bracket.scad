@@ -23,6 +23,9 @@ module upright_bracket(
         back_cover_width = 30,
         main_wall_height = 30,
         include_clamp_slot = true,
+        // Base rest is what the board sits on when angled.
+        // Doesn't need to be very thick.
+        base_rest_thickness = 5,
         ){
     low_wall_height = 6.4;  // 6.6 mm between edge of board and socket for first key.
     clamp_diameter = 24.5;
@@ -51,6 +54,11 @@ module upright_bracket(
             color("blue") right(wall_distance_apart) inner_wall();
             color("green") left(wall_outer_thickness) outer_wall();
         }
+    }
+
+    color("purple") translate([0, base_rest_thickness, base_thickness-overlap]){
+        base_rest();
+        back(main_board_length - base_rest_thickness) base_rest();
     }
 
     module base(){
@@ -127,6 +135,19 @@ module upright_bracket(
                 cylinder(d=clamp_diameter, h=2+overlap);
             }
         }
+    }
+
+    module base_rest(){
+        height_correction_factor = keyboard_height/tan(tilt_angle);
+        rotate([90,0,0]) linear_extrude(base_rest_thickness)
+        polygon([
+            [0,0],
+            [wall_distance_apart, 0],
+            [skew*height_correction_factor, height_correction_factor],
+
+        ]);
+
+        /* prismoid(size1=[keyboard_height, base_rest_thickness], size2=[0, base_rest_thickness], h=height_correction_factor); */
     }
 
 }
