@@ -10,7 +10,7 @@ $fs=0.4;
 
 overlap = 0.01;
 board_width_back = 159.5;
-main_board_length = 133.8;
+main_board_length = 133;
 // Not used, but useful for importing
 keyboard_height = 22.5;
 
@@ -53,7 +53,6 @@ module ergodox_outline(square_off_backs=false){
 
         module thumb_cluster(){
             // Thumb cluster
-            // TODO do this as a 2D shape, I think.
             hull(){
                 // rounded end
                 translate([thumb_cluster_corner_radius,thumb_cluster_length-thumb_cluster_corner_radius,0]){

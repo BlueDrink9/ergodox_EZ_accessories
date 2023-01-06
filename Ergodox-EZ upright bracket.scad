@@ -28,6 +28,12 @@ module upright_bracket(
     clamp_diameter = 24.5;
     front_right_key_distance_from_right = 16;
     rightmost_column_bottom_key_distance_from_bottom = 25.7;
+    // Distance between the walls gets smaller the larger the angle.
+    // We want it to stay the thickness of the board, regardless of angle.
+    // Need to move the walls apart to account for that.
+    // sin(x) = o/h; h = o/sin(x);
+    wall_distance_apart = keyboard_height / sin(tilt_angle);
+
     base();
     if (include_clamp_slot) {
         up(base_thickness-overlap){
@@ -38,13 +44,11 @@ module upright_bracket(
     // Skew gets defined as a shift x units across for every 1 unit up.
     // So can be modelled as a right triangle, with desired angle at base,
     // 1 as height and skew as adjacent side.
-    // tan(x) = o/a
-    // a = o/tan(x)
+    // tan(x) = o/a; a = o/tan(x)
     skew = 1/tan(tilt_angle);
     up(base_thickness-overlap) {
             skew(sxz=skew){
-            // Plus 1 to give it an easier fit
-            color("blue") right(keyboard_height+1) inner_wall();
+            color("blue") right(wall_distance_apart) inner_wall();
             color("green") left(wall_outer_thickness) outer_wall();
         }
     }
@@ -57,22 +61,43 @@ module upright_bracket(
 
 
     module outer_wall(){
-        coverable_part_of_back_length = 26;
-        front_cover_width = front_right_key_distance_from_right - 0.5;
-        front_cover_length = rightmost_column_bottom_key_distance_from_bottom - 0.5;
-        // Back cover
-        cube([wall_outer_thickness, coverable_part_of_back_length, back_cover_width]);
+        // This wall isn't actually going to reach up the full distance,
+        // because of the angle. So can afford to add a bit more length to it.
+        // That is calculated as the height correction factor
+        height_correction_factor = keyboard_height/tan(tilt_angle);
 
-        // front corner cover - avoid getting in the way of the keys
-        back(main_board_length - front_cover_length)
-            cube([wall_outer_thickness, front_cover_length, front_cover_width]);
+        // Back cover
+        coverable_part_of_back_length = 26;
+        cube([
+                wall_outer_thickness,
+                coverable_part_of_back_length,
+                back_cover_width + height_correction_factor
+        ]);
+
+        // front corner cover -- avoid getting in the way of the keys
+        // Subtract a little to ensure it isn't overlapping with keys
+        // and jamming them.
+        front_cover_width = front_right_key_distance_from_right +
+            height_correction_factor - 3;
+        front_cover_length = rightmost_column_bottom_key_distance_from_bottom - 3;
+
+        back(main_board_length - front_cover_length) cube([
+                wall_outer_thickness,
+                front_cover_length,
+                front_cover_width
+        ]);
+
         // low_wall
-        cube([wall_outer_thickness, main_board_length, low_wall_height]);
+        cube([
+                wall_outer_thickness,
+                main_board_length,
+                low_wall_height+height_correction_factor - 3
+        ]);
     }
 
     module inner_wall(){
         difference(){
-            cube([wall_outer_thickness, main_board_length, main_wall_height]);
+            cube([wall_inner_thickness, main_board_length, main_wall_height]);
             feet_gaps();
         }
         module feet_gaps(){
@@ -80,9 +105,9 @@ module upright_bracket(
                 feet_front_dist_from_back_edge,
                 feet_back_dist_from_back_edge,
             ]){
-                back = main_board_length - y - foot_radius;
-                translate([-overlap,back,base_thickness]) cube([
-                        wall_outer_thickness+2*overlap,
+                back = y - foot_radius;
+                translate([-overlap, back, overlap]) cube([
+                        wall_inner_thickness+2*overlap,
                         foot_radius*2,
                         main_wall_height,
                 ]);

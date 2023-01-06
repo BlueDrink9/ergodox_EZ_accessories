@@ -35,7 +35,9 @@ Again, photo examples are on their way.
 #### Slice notes
 
 Needs a decent infill, otherwise the walls may snap. The limiting factor is layer adhesion, so do what you can when slicing to increase it and you should be fine.
-Unlike the projects is is based off, it minimises thin extensions that I found were very likely to snap.
+Unlike the projects it is based off, it minimises thin extensions that I found were very likely to snap. There are still some parts that are likely to snap, but the mount should still work without them.
+
+I recommend slicing this sideways (so that it kinda looks like a Y from above), so that the parts that stick out are all printed with a single layer in the direction they stick out. Otherwise, layer adhesion is the only thing stopping them from snapping, and it isn't likely to be as strong.
 
 ## Build
 
