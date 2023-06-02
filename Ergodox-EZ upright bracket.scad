@@ -15,19 +15,21 @@ module upright_bracket(
         base_outer_width = 0,
         base_thickness = 3,
         wall_inner_thickness = 4,
-        wall_outer_thickness = 3,
+        wall_outer_thickness = 3.5,
         tilt_angle = 70,
         // How tall the walls are, basically. Back cover is for the outer wall,
         // main wall is the inner wall (on the bottom of the ergodox.
         // 40 mm covers the reset hole. The LED window starts 55mm in
         back_cover_width = 30,
-        main_wall_height = 30,
+        main_wall_height = 40,
         include_clamp_slot = true,
         // Base rest is what the board sits on when angled.
         // Doesn't need to be very thick.
         base_rest_thickness = 5,
         ){
-    low_wall_height = 6.4;  // 6.6 mm between edge of board and socket for first key.
+    // 6.6 mm between edge of board and socket for first key.
+    // 7 mm by micrometer.
+    low_wall_height = 6.8;
     clamp_diameter = 24.5;
     front_right_key_distance_from_right = 16;
     rightmost_column_bottom_key_distance_from_bottom = 25.7;
@@ -35,7 +37,8 @@ module upright_bracket(
     // We want it to stay the thickness of the board, regardless of angle.
     // Need to move the walls apart to account for that.
     // sin(x) = o/h; h = o/sin(x);
-    wall_distance_apart = keyboard_height / sin(tilt_angle);
+    // 0.8 is fine-tuning for my particular board + tolerances.
+    wall_distance_apart = keyboard_height / sin(tilt_angle) - 0.4;
 
     base();
     if (include_clamp_slot) {
@@ -79,10 +82,15 @@ module upright_bracket(
 
 
     module outer_wall(){
+        // Extra adjustment to keep wall off keys
+        wall_off_keys_adjustment = 1.5;
         // This wall isn't actually going to reach up the full distance,
         // because of the angle. So can afford to add a bit more length to it.
-        // That is calculated as the height correction factor
-        height_correction_factor = keyboard_height/tan(tilt_angle);
+        // That is calculated as the height correction factor. Treats it like a
+        // right angle triangle, where opposite side is the width of the kb
+        // bottom and correction length is the adjacent side. Angle is from
+        // bottom left. tan(x) = o/a, a = o/tan(x)
+        height_correction_factor = (keyboard_height) / tan(tilt_angle);
 
         // Back cover
         coverable_part_of_back_length = 26;
@@ -96,7 +104,7 @@ module upright_bracket(
         // Subtract a little to ensure it isn't overlapping with keys
         // and jamming them.
         front_cover_width = front_right_key_distance_from_right +
-            height_correction_factor - 3;
+            height_correction_factor - wall_off_keys_adjustment;
         front_cover_length = rightmost_column_bottom_key_distance_from_bottom - 3;
 
         back(main_board_length - front_cover_length) cube([
@@ -109,7 +117,9 @@ module upright_bracket(
         cube([
                 wall_outer_thickness,
                 main_board_length,
-                low_wall_height+height_correction_factor - 3
+                low_wall_height +
+                height_correction_factor -
+                wall_off_keys_adjustment
         ]);
     }
 
