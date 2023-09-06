@@ -7,20 +7,20 @@ foot_d = 8;
 ankle_d = 7;
 ankle_l = 2;
 leg_w = 9;
-leg_l = 120;
-head_inner_d = 12;
+leg_l = 85;
+head_inner_d = 7;
 // Head has 2 parts: a thinner part that interfaces with the hole on the
 // ergodox, which needs to be within a certain size; and the thicker main
 // part of the head, which can be as thick as you want for strength.
 head_outer_d = head_inner_d + 6;
-head_interface_outer_d = 14;
-head_interface_start_offset_h = 8;
+head_interface_outer_d = 10.3;
+head_interface_start_offset_h = 0.5;
 // Neck is the length between the ergodox and the leg; make this longer to
 // put a bigger gap betreen the body and the leg when folded.
 // Neck is also where the head narrows for the screw (no reason it
 // couldn't be a separate length but this is convenient).
-neck_h = 4;
-screw_hole_d = 4;
+neck_h = 3.5;
+screw_hole_d = 3;
 
 translate([0,-ankle_l,0]) foot();
 leg();
