@@ -14,12 +14,12 @@ head_inner_d = 7;
 // part of the head, which can be as thick as you want for strength.
 head_outer_d = head_inner_d + 6;
 head_interface_outer_d = 10.3;
-head_interface_h = 0.5;
+head_interface_h = 0.8;
 // Neck is the length between the ergodox and the leg; make this longer to
 // put a bigger gap betreen the body and the leg when folded.
 // Neck is also where the head narrows for the screw (no reason it
 // couldn't be a separate length but this is convenient).
-neck_h = 3.5;
+neck_h = 3;
 screw_hole_d = 3;
 
 translate([0,-ankle_l,0]) foot();
@@ -48,10 +48,18 @@ module head(){
             translate([0, 0, -overlap]) cylinder(999, d=head_inner_d);
         }
 
-        translate([0,0,-neck_h])
+        translate([0,0,-neck_h]){
             difference(){
                 cylinder(neck_h, d=head_outer_d);
                 translate([0, 0, -overlap]) cylinder(999, d=screw_hole_d);
             }
+            // interface with dox
+            translate([0,0,-head_interface_h]){
+                difference(){
+                    cylinder(neck_h, d=head_interface_outer_d);
+                    translate([0, 0, -overlap]) cylinder(999, d=screw_hole_d);
+                }
+            }
+        }
     }
 }
