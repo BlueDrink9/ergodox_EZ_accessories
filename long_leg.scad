@@ -3,8 +3,8 @@ $fa= $preview ? 12 : 3;
 overlap = 0.01;
 include <BOSL2/std.scad>
 
-foot_d = 8;
-ankle_d = 7;
+foot_d = 8.2; // Actual measure 8
+ankle_d = 6.6; // Actual measure 7
 ankle_l = 2;
 leg_w = 9;
 leg_l = 85;
@@ -14,7 +14,7 @@ head_inner_d = 7;
 // part of the head, which can be as thick as you want for strength.
 head_outer_d = head_inner_d + 6;
 head_interface_outer_d = 10.3;
-head_interface_start_offset_h = 0.5;
+head_interface_h = 0.5;
 // Neck is the length between the ergodox and the leg; make this longer to
 // put a bigger gap betreen the body and the leg when folded.
 // Neck is also where the head narrows for the screw (no reason it
@@ -37,7 +37,8 @@ module foot(){
 }
 
 module leg(){
-    translate([-leg_w/2, 0, -leg_w/2]) cube([leg_w, leg_l, leg_w]);
+    translate([-leg_w/2, 0, -leg_w/2]) cuboid([leg_w, leg_l, leg_w],
+    chamfer=1, p1=[0,0,0]);
 }
 
 module head(){
