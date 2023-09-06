@@ -22,6 +22,10 @@ head_interface_h = 0.8;
 neck_h = 3;
 screw_hole_d = 3;
 
+knurl_n_prisms = 40;
+knurl_prisms_h = 0.20;
+knurl_prisms_w = 0.40;
+
 translate([0,-ankle_l,0]) foot();
 leg();
 translate([0,leg_l+head_inner_d/2, -leg_w/2 - neck_h]) head();
@@ -62,4 +66,21 @@ module head(){
             }
         }
     }
+
+    // Knurling
+    translate([0,0,-head_interface_h+overlap]){
+        difference(){
+            for(i = [0:knurl_n_prisms-1]) {
+                angle = i * 360 / knurl_n_prisms;
+                rotate([0, -180, angle+90]) { // +90 to have the base of the
+                    prismoid(
+                            [knurl_prisms_w,head_interface_outer_d/2-overlap],
+                            [0,head_interface_outer_d/2-overlap],
+                            h=knurl_prisms_h, anchor=BOTTOM+BACK+CENTER);
+                }
+            }
+            translate([0, 0, -99]) cylinder(999, d=screw_hole_d+1);
+        }
+    }
+
 }
