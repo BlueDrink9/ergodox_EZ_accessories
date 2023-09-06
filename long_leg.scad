@@ -7,7 +7,7 @@ foot_d = 8.2; // Actual measure 8
 ankle_d = 6.6; // Actual measure 7
 ankle_l = 2;
 leg_w = 9;
-leg_l = 85;
+leg_l = 95; // OEM legs are 45, Thingiverse extended legs are 85.
 head_inner_d = 7;
 // Head has 2 parts: a thinner part that interfaces with the hole on the
 // ergodox, which needs to be within a certain size; and the thicker main
